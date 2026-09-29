@@ -5,10 +5,15 @@ from sqlalchemy.orm import Session
 from datetime import timedelta
 from database import engine, get_db
 import models, schemas, auth, crud
+import seed
 
 models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title="Library Management System")
+
+@app.on_event("startup")
+def on_startup():
+    seed.seed_data()
 
 # Configure CORS for frontend access
 app.add_middleware(
